@@ -1,0 +1,32 @@
+Sub RemoveTags()
+    Dim r As Range
+
+    'Selection.NumberFormat = "@"  'set cells to text numberformat'
+
+    Application.Calculation = xlCalculationManual
+    Application.ScreenUpdating = False
+    Application.DisplayStatusBar = False
+    Application.EnableEvents = False
+
+    With CreateObject("vbscript.regexp")
+      .Pattern = "\<.*?\>"
+      .Global = True
+
+      For Each r In Range("C6:G206")
+        r.Value = Replace(.Replace(r.Value, ""), "&#8233;", " ")
+        r.Value2 = Replace(.Replace(r.Value2, ""), "&quot;", " ")
+      Next r
+      
+      For Each r In Range("H6:H206")
+        r.Value = Replace(.Replace(r.Value, ""), "#", " ")
+        'r.Value2 = Replace(.Replace(r.Value2, ""), "&quot;", " ")
+      Next r
+      
+    End With
+    
+    
+    Application.Calculation = xlCalculationAutomatic
+    Application.ScreenUpdating = True
+    Application.DisplayStatusBar = True
+    Application.EnableEvents = True
+End Sub
