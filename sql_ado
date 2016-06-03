@@ -1,0 +1,61 @@
+Sub getChartData()
+
+'Clear Contents'
+ActiveWorkbook.Worksheets("ChartData").Range("A5:O200").ClearContents
+
+'Clear Title'
+ActiveWorkbook.Worksheets("ChartData").Range("E2:H2").ClearContents
+
+
+ 'Test if the value is cell B2 is blank/empty
+   If IsEmpty(ActiveWorkbook.Worksheets("chartOutput").Range("C3").Value) = True Then
+      MsgBox "Enter Chart ID"
+Else
+
+    'Declare variables'
+        Set objMyConn = New ADODB.Connection
+        Set objMyRecordset = New ADODB.Recordset
+        Set objMyRecordset2 = New ADODB.Recordset
+        Dim strSQL As String
+
+    'Open Connection'
+        objMyConn.ConnectionString = "Data Source=TEST;User ID=TEST;Password=TEST;Initial Catalog=live;Provider=SQLNCLI11.1;Auto Translate=False;"
+        objMyConn.Open
+
+    'Set and Excecute SQL Command'
+  strSQL = " " & vbCrLf & _
+  " & vbCrLf & _
+ "where  LIKE '%" & ActiveWorkbook.Worksheets("chartOutput").Range("C3") & "%'"
+
+
+    'Open Recordset'
+        Set objMyRecordset.ActiveConnection = objMyConn
+        objMyRecordset.Open strSQL
+
+
+    'Copy Data to Excel'
+    ActiveWorkbook.Worksheets("ChartData").Range("A5").CopyFromRecordset (objMyRecordset)
+  
+        
+          'Set and Excecute SQL Command for title'
+  strSQL = "" & vbCrLf & _
+"t" & vbCrLf & _
+ "where old_chart_id LIKE '%" & ActiveWorkbook.Worksheets("chartOutput").Range("C3") & "%' "
+        
+    'Open Recordset2'
+        Set objMyRecordset2.ActiveConnection = objMyConn
+        objMyRecordset2.Open strSQL
+
+
+    'Copy Data to Excel'
+       ActiveWorkbook.Worksheets("ChartData").Range("E2:I2").CopyFromRecordset (objMyRecordset2)
+      
+        
+End If
+        
+Call ClearContentBasedonCriteria
+chartConvert
+        
+End Sub
+
+
